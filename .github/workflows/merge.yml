@@ -38,7 +38,7 @@ jobs:
         ref: main
         token: ${{ secrets.PHANICODE_AUTH }}
     - run: |
-          git pull
+          git pull origin master --allow-unrelated-histories
           git checkout archive
           git merge main -m "merging main"
           git config user.name  'phanicode'
