@@ -1,54 +1,30 @@
 name: 'Monthly Merge'
 on: 
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'     
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'  
-#   schedule:
-#     - cron:  '0 0 1 * *'
-  
+  schedule:
+    - cron:  '0 0 1 * *'
 jobs:
    nightly-merge:
 
     runs-on: ubuntu-latest
 
     steps:
-#     - name: Checkout
-#       uses: actions/checkout@v2
-#       with:
-#         ref: archive
-#         token: ${{ secrets.ACTION_TOKEN }}
-      
-#     - name: Monthly merge
-#       uses: robotology/gh-action-nightly-merge@v1.3.2
-
-#       with:
-#         stable_branch: 'main'
-#         development_branch: 'archive'
-#         allow_forks: true
-#         allow_ff: true
-      
     - name: Checkout 2
       uses: actions/checkout@v2
       with:
         ref: main
         token: ${{ secrets.PHANICODE_AUTH }}
     - run: |
-          git pull origin main --allow-unrelated-histories
+          git clone https://github.com/phanicode/ucast-db-test.git
+          cd ucast-db-test
+          git pull origin
           git checkout archive
-          git merge main -m "merging main"
-          git config user.name  'phanicode'
-          git config user.email 'phaniv@email.arizona.edu'
+          git checkout main -- .
+          git commit -m "copy files from main to archive"
           Y=$(date -d "12 hours ago" '+%Y')
           m=$(date -d "12 hours ago" '+%m')
           d=$(date -d "12 hours ago" '+%d')
           echo $Y $m $d
           echo ALMA/$Y-$m
-          git checkout main
           git rm --ignore-unmatch ALMA/$Y-$m* 
           git rm --ignore-unmatch APEX/$Y-$m*
           git rm --ignore-unmatch GLT/$Y-$m*
@@ -61,9 +37,10 @@ jobs:
           git rm --ignore-unmatch SMT/$Y-$m*
           git rm --ignore-unmatch SPT/$Y-$m*
           git add .
-          
-          git commit -m --allow-empty "removed last month" 
-          git push --force --set-upstream origin
+          git commit --allow-empty -m "removed last month"  
+          git push --all --force --set-upstream origin
+          cd ..
+          rm -rf ucast-db-tests
           
       env:
         GITHUB_TOKEN: ${{ secrets.PHANICODE_AUTH }}
