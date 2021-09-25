@@ -42,5 +42,5 @@ jobs:
           cd ..
           rm -rf ucast-db-test
           
-      env:
+    env:
         GITHUB_TOKEN: ${{ secrets.PHANICODE_AUTH }}
