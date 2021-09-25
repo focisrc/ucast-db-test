@@ -1,4 +1,7 @@
+# RUN AS cronjob
+# 0 0 1 * * monthly-script.sh
 # Uncomment first two and last two lines if using script seperately
+
 # git clone https://github.com/phanicode/ucast-db-test.git
 # cd ucast-db-test
 git pull origin
