@@ -1,7 +1,7 @@
 name: 'Monthly Merge'
-on: 
-  schedule:
-    - cron:  '0 0 1 * *'
+on: [push]
+#   schedule:
+#     - cron:  '0 0 1 * *'
 jobs:
    nightly-merge:
 
@@ -14,8 +14,7 @@ jobs:
         ref: main
         token: ${{ secrets.PHANICODE_AUTH }}
     - run: |
-          git clone https://github.com/focisrc/ucast-db-test.git
-          cd ucast-db-test
+
           git pull origin
           git checkout archive
           git checkout main -- .
